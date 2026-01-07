@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Node.js</title>
+</head>
+<body>
+
+<h2>Chat en tiempo real</h2>
+
+<input type="text" id="mensaje" placeholder="Escribe un mensaje">
+<button onclick="enviar()">Enviar</button>
+
+<ul id="chat"></ul>
+
+<script>
+const ws = new WebSocket("ws://localhost:8080");
+
+ws.onopen = () => {
+    console.log("Conectado al chat");
+};
+
+ws.onmessage = (event) => {
+    const li = document.createElement("li");
+    li.textContent = event.data;
+    document.getElementById("chat").appendChild(li);
+};
+
+function enviar() {
+    const input = document.getElementById("mensaje");
+    if (ws.readyState === WebSocket.OPEN && input.value !== "") {
+        ws.send(input.value);
+        input.value = "";
+    }
+}
+</script>
+
+</body>
+</html>
